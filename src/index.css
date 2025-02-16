@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: 'Uber Bold';
+    font-style: normal;
+    font-weight: 700;
+    src: url('/UberFonts/UberMoveTextBold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Uber Medium';
+    font-style: normal;
+    font-weight: 500;
+    src: url('/UberFonts/UberMoveTextMedium.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Uber Light';
+    font-style: normal;
+    font-weight: 300;
+    src: url('/UberFonts/UberMoveTextLight.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Uber Regular';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/UberFonts/UberMoveTextRegular.otf') format('opentype');
+}
