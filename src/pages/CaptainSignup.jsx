@@ -1,27 +1,57 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { CaptainDataContext } from "../context/CaptainContext";
 const CaptainSignup = () => {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [captainData, setCaptainData] = useState({});
-  const submitHandler = (e) => {
+  const [color, setColor] = useState("");
+  const [plate, setPlate] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [vehicleType, setVehicleType] = useState("");
+  const { captain, setCaptain } = useContext(CaptainDataContext);
+  const navigate=useNavigate();
+  const submitHandler = async (e) => {
     e.preventDefault();
-    setCaptainData({
+    const newCaptain = {
       email,
       password,
       fullName: {
         firstName,
         lastName,
       },
-    });
-   
+      vehicle:{
+        color,
+        capacity,
+        plate,
+        vehicleType
+      }
+    };
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/captains/register`,
+        newCaptain
+      );
+      if (response.status == 201) {
+        const data = response.data;
+        setCaptain(data.captain);
+        localStorage.setItem("token", data.token);
+        navigate("/captainHome");
+      }
+    } catch (err) {
+      console.log("Error while registering captain", err.response.data.error);
+    }
     setEmail("");
     setPassword("");
     setFirstName("");
     setLastName("");
+    setCapacity('');
+    setColor('');
+    setPlate('');
+    setVehicleType('');
   };
   return (
     <div className="p-7 h-screen w-full flex flex-col justify-between items-center ">
@@ -83,11 +113,70 @@ const CaptainSignup = () => {
             name="password"
             placeholder="password"
           />
+          <h3 className="text-lg font-[Uber Medium] font-semibold mb-4">
+            Vehicle Information
+          </h3>
+          <div className="flex flex-col gap-4 mb-6">
+            <div className="flex gap-4">
+              <input
+                value={color}
+                onChange={(e) => {
+                  setColor(e.target.value);
+                }}
+                className="bg-[#eeeeee] px-5 rounded-md py-2 w-1/2 text-xl placeholder:text-base outline-none"
+                type="text"
+                name="color"
+                placeholder="Color"
+              />
+              <input
+                value={plate}
+                onChange={(e) => {
+                  setPlate(e.target.value);
+                }}
+                className="bg-[#eeeeee] px-5 rounded-md py-2 w-1/2 text-xl placeholder:text-base outline-none"
+                type="text"
+                name="plate"
+                placeholder="Plate No"
+              />
+            </div>
+            <div className="flex gap-4">
+              <input
+                value={capacity}
+                onChange={(e) => {
+                  setCapacity(e.target.value);
+                }}
+                className="bg-[#eeeeee] px-5 rounded-md py-2 w-1/2 text-xl placeholder:text-base outline-none"
+                type="text"
+                name="capacity"
+                placeholder="Capacity"
+              />
+              <select
+                name="vehicleType"
+                value={vehicleType}
+                onChange={(e) => {
+                  setVehicleType(e.target.value);
+                }}
+                className="bg-[#eeeeee] h-[40px] px-5 rounded-md py-2 text-gray-600 text-base appearance-none"
+              >
+                <option className="text-base" value="car">
+                  Car
+                </option>
+                <option className="text-base" value="motorcycle">
+                  Motorcycle
+                </option>
+                <option className="text-base" value="auto">
+                  Auto
+                </option>
+              </select>
+            </div>
+          </div>
+
           <div className="flex items-start space-x-2 mb-6">
             <input
-              type="radio"
+              type="checkbox"
               id="consent"
               name="consent"
+              className="mt-1"
               required
             />
             <label htmlFor="consent" className="text-[12px] leading-tight">
